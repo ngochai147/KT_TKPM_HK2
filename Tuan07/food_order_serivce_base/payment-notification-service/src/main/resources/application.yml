@@ -1,0 +1,38 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: payment-notification-service
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:food_ordering_db}
+    username: ${DB_USERNAME:team}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+integration:
+  order-service:
+    base-url: http://localhost:8083
+    update-status-path: /orders/{orderId}/status
+    get-order-path: /orders/{orderId}
+  notification:
+    mode: LOG
+    endpoint: http://localhost:8090/notifications
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:8085
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  
